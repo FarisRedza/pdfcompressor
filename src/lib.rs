@@ -10,16 +10,20 @@ struct Cli {
     path: std::path::PathBuf,
 }
 
-
 pub fn parse_input() -> (String, String, String) {
     let args = Cli::parse();
-    let output_file = args.path.clone().with_extension("compressed.pdf");
+    let file_check = args.path.clone().exists();
+    if file_check == true {
+        let output_file = args.path.clone().with_extension("compressed.pdf");
     
-    let compress_arg = format!("-dPDFSETTINGS=/{}", args.pattern);
-    let input_arg = String::from(args.path.into_os_string().into_string().unwrap());
-    let output_arg = format!("-sOutputFile={}", output_file.into_os_string().into_string().unwrap());
+        let compress_arg = format!("-dPDFSETTINGS=/{}", args.pattern);
+        let input_arg = String::from(args.path.into_os_string().into_string().unwrap());
+        let output_arg = format!("-sOutputFile={}", output_file.into_os_string().into_string().unwrap());
 
-    return (input_arg, output_arg, compress_arg);
+        return (input_arg, output_arg, compress_arg);
+    } else {
+        panic!("Error: No file found");
+    }
 }
 
 pub fn compress(input_arg: String, output_arg: String, compress_arg: String) {
