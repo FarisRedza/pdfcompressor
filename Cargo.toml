@@ -6,4 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.0", features ["derive"] }
+clap = { version = "4.0", features = ["derive"] }
+system-deps = "2.0"
+
+[package.metadata.system-deps]
+ghostscript = "9.56"
