@@ -1,12 +1,4 @@
-#![allow(unused)]
-
-use std::io;
-use std::io::{Write, BufReader, BufRead, ErrorKind};
-use std::fs::File;
-use std::path::PathBuf;
-use std::process::Command;
-
-use clap::{Parser, Arg};
+use clap::Parser;
 
 /// Simple frontend for ghostscript to compress PDF files
 #[derive(Parser, Debug)]
