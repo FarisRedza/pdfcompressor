@@ -1,17 +1,16 @@
 use std::process::Command;
+use std::path::PathBuf;
 
-pub fn compress(input_arg: String, output_arg: String, compress_arg: String) {
+pub fn compress(input_arg: PathBuf, output_arg: String, compress_arg: String) {
     Command::new("gs")
-        .args([
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            "-dNOPAUSE",
-            "-dQUIET",
-            "-dBATCH",
-            compress_arg.as_str(),
-            output_arg.as_str(),
-            input_arg.as_str(),
-        ])
+        .arg("-sDEVICE=pdfwrite")
+        .arg("-dCompatibilityLevel=1.4")
+        .arg( "-dNOPAUSE")
+        .arg("-dQUIET")
+        .arg( "-dBATCH")
+        .arg(compress_arg.as_str())
+        .arg(output_arg.as_str())
+        .arg(input_arg)
         .spawn()
         .expect("ghostscript failed to execute");
 }

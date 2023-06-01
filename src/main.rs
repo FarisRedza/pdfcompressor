@@ -1,33 +1,32 @@
 use clap::Parser;
+use std::path::PathBuf;
 
 /// Simple frontend for ghostscript to compress PDF files
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Compression level (low, medium, high)
+    /// Compressed output file quality (low, medium, high)
     #[arg(short, long, default_value_t = String::from("medium"))]
-    compression: String,
+    quality: String,
 
     /// Input file name
     #[arg(short, long)]
-    file: std::path::PathBuf,
+    file: PathBuf,
 }
 
 fn main() {
     let args = Args::parse();
-    let compress_arg = match args.compression.as_ref() {
-        "low" => String::from("-dPDFSETTINGS=/printer"),
+    let compress_arg = match args.quality.as_ref() {
+        "low" => String::from("-dPDFSETTINGS=/screen"),
         "medium" => String::from("-dPDFSETTINGS=/ebook"),
-        "high" => String::from("-dPDFSETTINGS=/screen"),
-        _ => panic!("Error: Invalid compression level"),
+        "high" => String::from("-dPDFSETTINGS=/printer"),
+        _ => panic!("Error: Invalid output file quality, use low, medium, or high"),
     };
     
     let file_check = args.file.clone().exists();
     if file_check == true {
-        let output_file = args.file.clone().with_extension("compressed.pdf");
-    
-        let input_arg = String::from(args.file.into_os_string().into_string().unwrap());
-        let output_arg = format!("-sOutputFile={}", output_file.into_os_string().into_string().unwrap());
+        let input_arg = args.file.clone();
+        let output_arg = format!("-sOutputFile={}_compressed.pdf", args.file.with_extension("").into_os_string().into_string().unwrap());
 
         pdfcompressor::compress(input_arg, compress_arg, output_arg);
     } else {
