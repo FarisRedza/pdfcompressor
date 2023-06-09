@@ -1,5 +1,7 @@
 use clap::Parser;
 use std::path::PathBuf;
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Button, Label, Box, Orientation};
 
 /// Simple frontend for ghostscript to compress PDF files
 #[derive(Parser, Debug)]
@@ -15,21 +17,46 @@ struct Args {
 }
 
 fn main() {
-    let args = Args::parse();
-    let compress_arg = match args.quality.as_ref() {
-        "low" => String::from("-dPDFSETTINGS=/screen"),
-        "medium" => String::from("-dPDFSETTINGS=/ebook"),
-        "high" => String::from("-dPDFSETTINGS=/printer"),
-        _ => panic!("Error: Invalid output file quality, use low, medium, or high"),
-    };
-    
-    let file_check = args.file.clone().exists();
-    if file_check == true {
-        let input_arg = args.file.clone();
-        let output_arg = format!("-sOutputFile={}_compressed.pdf", args.file.with_extension("").into_os_string().into_string().unwrap());
+    let app = Application::builder()
+        .application_id("com.jwestall.ui-demo")
+        .build();
 
-        pdfcompressor::compress(input_arg, compress_arg, output_arg);
-    } else {
-        panic!("Error: No file found");
-    }
+    app.connect_activate(build_ui);
+    app.run();
+}
+
+fn build_ui(app: &Application) {
+    let label = Label::builder()
+        .label("Press to compress")
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let button = Button::builder()
+        .label("Compress File")
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let content = Box::new(Orientation::Vertical, 0);
+    content.append(&label);
+    content.append(&button);
+
+    let window = ApplicationWindow::builder()
+        .title("PDF Compressor")
+        .application(app)
+        .child(&content)
+        .build();
+
+    button.connect_clicked(move |_| compress_button(&label));
+
+    window.show();
+}
+
+fn compress_button(label: &Label) {
+    label.set_text("Compressing");
 }

@@ -7,7 +7,10 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.3", features = ["derive"] }
+gtk = { version = "0.4.7", package = "gtk4" }
+rand = "0.8.5"
 system-deps = "2.0"
+
 
 [package.metadata.system-deps]
 ghostscript = "9.56"
