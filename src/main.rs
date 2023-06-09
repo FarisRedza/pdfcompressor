@@ -58,5 +58,10 @@ fn build_ui(app: &Application) {
 }
 
 fn compress_button(label: &Label) {
+    let input_arg: PathBuf = PathBuf::from("less.pdf");
+    let compress_arg = String::from("-dPDFSETTINGS=/screen");
+    let output_arg = String::from("-sOutputFile=less_compressed.pdf");
+    
     label.set_text("Compressing");
+    pdfcompressor::compress(input_arg, output_arg, compress_arg);
 }
