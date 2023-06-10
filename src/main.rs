@@ -1,12 +1,9 @@
-use gtk::glib;
-use gtk::prelude::*;
-
 use gtk::{
-    Application, ApplicationWindow, Box, Orientation, Button,
+    glib, prelude::*,
+    Application, ApplicationWindow, Box, Orientation,
+    Button, Label, MenuButton,
     FileChooserAction, FileChooserDialog, ResponseType
 };
-
-use std::process::Command;
 
 const APP_ID: &str = "com.github.pdfcompressor";
 
@@ -20,20 +17,69 @@ fn main() {
 }
 
 pub fn build_ui(app: &Application) {
+    let intro_label = Label::builder()
+        .label("Select a PDF file to compress")
+        .margin_top(12)
+        .margin_bottom(6)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+
     let file_button = Button::builder()
-    .label("Select File")
-    .margin_top(12)
-    .margin_bottom(12)
-    .margin_start(12)
-    .margin_end(12)
-    .build();
+        .label("Select File")
+        .margin_top(12)
+        .margin_bottom(6)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let file_label = Label::builder()
+        .label("No file selected")
+        .margin_top(6)
+        .margin_bottom(6)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+        let file_size_label = Label::builder()
+        .label("File size:")
+        .margin_top(6)
+        .margin_bottom(6)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    // Create the quality menu button
+    let quality_menubutton = MenuButton::builder()
+        .label("Quality Level")
+        .margin_top(6)
+        .margin_bottom(6)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+        let compress_button = Button::builder()
+        .label("Compress")
+        .margin_top(6)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
 
     let content = Box::new(Orientation::Vertical, 0);
+    content.append(&intro_label);
     content.append(&file_button);
+    content.append(&file_label);
+    content.append(&file_size_label);
+    content.append(&quality_menubutton);
+    content.append(&compress_button);
 
     let window = ApplicationWindow::builder()
         .title("PDF Compressor")
         .application(app)
+        .default_width(320)
+        .default_height(200)
         .child(&content)
         .build();
 
@@ -57,11 +103,7 @@ pub fn build_ui(app: &Application) {
 
                 let compress_arg = String::from("-dPDFSETTINGS=/screen");
 
-                println!("Input arg: {}", &input_arg);
-                println!("Output arg: {}", &output_arg);
-                println!("Compress arg: {}", &compress_arg);
-
-                compress(input_arg, output_arg, compress_arg);
+                pdfcompressor::compress(input_arg, output_arg, compress_arg);
             }
             d.close();
         });
@@ -70,18 +112,4 @@ pub fn build_ui(app: &Application) {
     }));
 
     window.show();
-}
-
-pub fn compress(input_arg: String, output_arg: String, compress_arg: String) {
-    Command::new("gs")
-        .arg("-sDEVICE=pdfwrite")
-        .arg("-dCompatibilityLevel=1.4")
-        .arg( "-dNOPAUSE")
-        .arg("-dQUIET")
-        .arg( "-dBATCH")
-        .arg(compress_arg.as_str())
-        .arg(output_arg.as_str())
-        .arg(input_arg.as_str())
-        .spawn()
-        .expect("ghostscript failed to execute");
 }
