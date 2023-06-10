@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PDFCompressor" parent="GtkApplicationWindow">
+    <property name="width-request">240</property>
+    <property name="title">PDF Compressor</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="spacing">6</property>
+
+        <child>
+          <object class="GtkButton" id="file_chooser_button">
+            <property name="label">Select File</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="file_name">
+            <property name="label">No File Selected</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkLabel" id="file_name_size">
+            <property name="label">File Size: N/A</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuButton" id="quality_menubutton">
+            <property name="label">Quality Level</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkButton" id="compress_button">
+            <property name="label">Compress</property>
+              <style>
+                <class name="suggested-action"/>
+              </style>
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+</interface>

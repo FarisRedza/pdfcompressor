@@ -13,6 +13,9 @@ glib = "0.17.10"
 gtk = { version = "0.6.6", package = "gtk4" }
 system-deps = "2.0"
 
+[build-dependencies]
+glib-build-tools = "0.17.10"
+
 
 [package.metadata.system-deps]
 ghostscript = "9.56"

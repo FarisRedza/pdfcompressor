@@ -1,6 +1,10 @@
 use std::process::Command;
 
 pub fn compress(input_arg: String, output_arg: String, compress_arg: String) {
+    println!("Input arg: {}", &input_arg);
+    println!("Output arg: {}", &output_arg);
+    println!("Compress arg: {}", &compress_arg);
+    
     Command::new("gs")
         .arg("-sDEVICE=pdfwrite")
         .arg("-dCompatibilityLevel=1.4")
