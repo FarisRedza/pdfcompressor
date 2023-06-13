@@ -1,19 +1,23 @@
 use std::process::Command;
 
-pub fn compress(input_arg: String, output_arg: String, compress_arg: String) {
-    println!("Input arg: {}", &input_arg);
-    println!("Output arg: {}", &output_arg);
-    println!("Compress arg: {}", &compress_arg);
-    
+#[derive(Debug)]
+pub struct Arguments {
+    pub input: String,
+    pub output: String,
+    pub compress: String,
+}
+
+pub fn compress(args: &Arguments) {
+    dbg!(&args);
     Command::new("gs")
         .arg("-sDEVICE=pdfwrite")
         .arg("-dCompatibilityLevel=1.4")
         .arg( "-dNOPAUSE")
         .arg("-dQUIET")
         .arg( "-dBATCH")
-        .arg(compress_arg.as_str())
-        .arg(output_arg.as_str())
-        .arg(input_arg.as_str())
-        .spawn()
+        .arg(args.compress.as_str())
+        .arg(args.output.as_str())
+        .arg(args.input.as_str())
+        .status()
         .expect("ghostscript failed to execute");
 }

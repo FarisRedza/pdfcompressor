@@ -13,6 +13,12 @@
         <property name="spacing">6</property>
 
         <child>
+          <object class="GtkLabel" id="prompt">
+            <property name="label">Select a PDF file to compress</property>
+          </object>
+        </child>
+
+        <child>
           <object class="GtkButton" id="file_chooser_button">
             <property name="label">Select File</property>
           </object>
@@ -31,7 +37,7 @@
         </child>
 
         <child>
-          <object class="GtkMenuButton" id="quality_menubutton">
+          <object class="GtkButton" id="quality_menubutton">
             <property name="label">Quality Level</property>
           </object>
         </child>
