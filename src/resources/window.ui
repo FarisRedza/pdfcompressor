@@ -19,8 +19,9 @@
         </child>
 
         <child>
-          <object class="GtkButton" id="file_chooser_button">
+          <object class="GtkButton">
             <property name="label">Select File</property>
+            <property name="action-name">window.open</property>
           </object>
         </child>
 

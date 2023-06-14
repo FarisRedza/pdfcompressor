@@ -1,6 +1,8 @@
 mod imp;
 
+// use gio::File;
 use glib::Object;
+use gtk::subclass::prelude::*;
 use gtk::{gio, glib, Application};
 
 glib::wrapper! {
@@ -16,4 +18,9 @@ impl Window {
         Object::builder().property("application", app)
             .build()
     }
+
+    // fn set_pdf_file(&self, file: File) {
+    //     let file_path = self.imp().file.to_string();
+    //     println!("{}", file_path);
+    // }
 }

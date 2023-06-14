@@ -1,19 +1,20 @@
 use glib::subclass::InitializingObject;
-use gtk::{prelude::*, ApplicationWindow};
+use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{glib, Button, MenuButton, CompositeTemplate, FileDialog};
+use gtk::{glib, CompositeTemplate, FileDialog};
 use pdfcompressor::Arguments;
+use gtk::gio::File;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/org/pdfcompressor/resources/window.ui")]
 pub struct Window {
     #[template_child]
-    pub file_chooser_button: TemplateChild<Button>,
+    pub quality_menubutton: TemplateChild<gtk::Button>,
     #[template_child]
-    pub quality_menubutton: TemplateChild<Button>,
-    #[template_child]
-    pub compress_button: TemplateChild<Button>,
+    pub compress_button: TemplateChild<gtk::Button>,
+    // #[template_child]
+    // pub file: TemplateChild<File>,
 }
 
 // The central trait for subclassing a GObject
@@ -26,6 +27,21 @@ impl ObjectSubclass for Window {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.install_action_async(
+            "window.open",
+            None,
+            |window, _action_name, _action_target| async move {
+                let file_dialog = FileDialog::builder()
+                    .title("Open File")
+                    .accept_label("Open")
+                    .modal(true)
+                    .build();
+
+                if let Ok(file) = file_dialog.open_future(Some(&window)).await {
+                    println!("{}", file);
+                }
+            }
+        )
     }
 
     fn instance_init(obj: &InitializingObject<Self>) {
@@ -38,11 +54,6 @@ impl ObjectImpl for Window {
     fn constructed(&self) {
         // Call "constructed" on parent
         self.parent_constructed();
-
-        // Connect to "clicked" signal of `file_chooser_button`
-        self.file_chooser_button.connect_clicked(move |file_chooser_button| {
-            println!("Dank memes");
-        });
 
         // Connect to "clicked" signal of `file_chooser_button`
         self.quality_menubutton.connect_clicked(move |quality_menubutton| {
