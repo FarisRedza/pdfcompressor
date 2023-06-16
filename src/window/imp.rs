@@ -1,9 +1,8 @@
 use glib::subclass::InitializingObject;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{glib, CompositeTemplate, FileDialog};
-use pdfcompressor::Arguments;
-use gtk::gio::File;
+use gtk::{glib, CompositeTemplate};
+use pdfcompressor::CompressObject;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
@@ -13,8 +12,6 @@ pub struct Window {
     pub quality_menubutton: TemplateChild<gtk::Button>,
     #[template_child]
     pub compress_button: TemplateChild<gtk::Button>,
-    // #[template_child]
-    // pub file: TemplateChild<File>,
 }
 
 // The central trait for subclassing a GObject
@@ -31,7 +28,7 @@ impl ObjectSubclass for Window {
             "window.open",
             None,
             |window, _action_name, _action_target| async move {
-                let file_dialog = FileDialog::builder()
+                let file_dialog = gtk::FileDialog::builder()
                     .title("Open File")
                     .accept_label("Open")
                     .modal(true)
@@ -62,12 +59,12 @@ impl ObjectImpl for Window {
         
         // Connect to "clicked" signal of `compress_button`
         self.compress_button.connect_clicked(move |compress_button| {
-            let args = Arguments{
-                input: String::from("/home/faris/Downloads/Report.pdf"),
-                output: String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
-                compress: String::from("-dPDFSETTINGS=/screen"),
+            let compression = CompressObject {
+                input_arg: String::from("/home/faris/Downloads/Report.pdf"),
+                output_arg: String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
+                quality: String::from("-dPDFSETTINGS=/screen"),
             };
-            pdfcompressor::compress(&args);
+            compression.compress_file();
         });
     }
 }

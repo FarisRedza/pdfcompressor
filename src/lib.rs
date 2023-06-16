@@ -1,23 +1,25 @@
 use std::process::Command;
 
 #[derive(Debug)]
-pub struct Arguments {
-    pub input: String,
-    pub output: String,
-    pub compress: String,
+pub struct CompressObject {
+    pub input_arg: String,
+    pub output_arg: String,
+    pub quality: String,
 }
 
-pub fn compress(args: &Arguments) {
-    dbg!(&args);
-    Command::new("gs")
-        .arg("-sDEVICE=pdfwrite")
-        .arg("-dCompatibilityLevel=1.4")
-        .arg( "-dNOPAUSE")
-        .arg("-dQUIET")
-        .arg( "-dBATCH")
-        .arg(args.compress.as_str())
-        .arg(args.output.as_str())
-        .arg(args.input.as_str())
-        .status()
-        .expect("ghostscript failed to execute");
+impl CompressObject {
+    pub fn compress_file(&self) {
+        dbg!(&self);
+        Command::new("gs")
+            .arg("-sDEVICE=pdfwrite")
+            .arg("-dCompatibilityLevel=1.4")
+            .arg( "-dNOPAUSE")
+            .arg("-dQUIET")
+            .arg( "-dBATCH")
+            .arg(self.quality.as_str())
+            .arg(self.output_arg.as_str())
+            .arg(self.input_arg.as_str())
+            .status()
+            .expect("ghostscript failed to execute");
+    }
 }

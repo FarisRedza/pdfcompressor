@@ -1,8 +1,7 @@
 mod window;
 
-use gdk::Display;
 use gtk::prelude::*;
-use gtk::{gdk, gio, glib, Application, CssProvider, StyleContext};
+use gtk::{glib, gdk, gio};
 use window::Window;
 
 const APP_ID: &str = "com.pdfcompressor.github";
@@ -13,7 +12,7 @@ fn main() -> glib::ExitCode {
         .expect("Failed to register resources.");
 
     // Create a new application
-    let app = Application::builder()
+    let app = gtk::Application::builder()
         .application_id(APP_ID)
         .build();
 
@@ -25,7 +24,7 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
-fn build_ui(app: &Application) {
+fn build_ui(app: &gtk::Application) {
     // Create new window and present it
     let window = Window::new(app);
     window.present();
@@ -34,12 +33,12 @@ fn build_ui(app: &Application) {
 
 fn load_css() {
     // Load the CSS file and add it to the provider
-    let provider = CssProvider::new();
+    let provider = gtk::CssProvider::new();
     provider.load_from_data(include_str!("resources/ui.css"));
 
     // Add the provider to the default screen
-    StyleContext::add_provider_for_display(
-        &Display::default().expect("Could not connect to a display."),
+    gtk::StyleContext::add_provider_for_display(
+        &gdk::Display::default().expect("Could not connect to a display."),
         &provider,
         gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
