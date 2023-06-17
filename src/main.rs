@@ -1,10 +1,18 @@
 mod window;
+mod compress;
 
+// use glib::{MainContext, Priority};
 use gtk::prelude::*;
 use gtk::{glib, gdk, gio};
-use window::Window;
 
 const APP_ID: &str = "com.pdfcompressor.github";
+
+pub enum Event {
+    SelectFile,
+    CompressFile,
+    Closed,
+    Quit,
+}
 
 fn main() -> glib::ExitCode {
     // Register and include resources
@@ -25,8 +33,10 @@ fn main() -> glib::ExitCode {
 }
 
 fn build_ui(app: &gtk::Application) {
+    // let (tx, rx) = glib::MainContext::channel(glib::Priority::default());
+
     // Create new window and present it
-    let window = Window::new(app);
+    let window = window::Window::new(app);
     window.present();
     
 }

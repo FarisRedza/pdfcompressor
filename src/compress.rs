@@ -1,6 +1,6 @@
 use std::process::Command;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CompressObject {
     pub input_arg: String,
     pub output_arg: String,

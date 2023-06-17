@@ -1,6 +1,5 @@
 mod imp;
 
-// use gio::File;
 use glib::Object;
 use gtk::{gio, glib};
 
