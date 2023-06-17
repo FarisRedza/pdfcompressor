@@ -33,12 +33,9 @@ fn main() -> glib::ExitCode {
 }
 
 fn build_ui(app: &gtk::Application) {
-    // let (tx, rx) = glib::MainContext::channel(glib::Priority::default());
-
     // Create new window and present it
     let window = window::Window::new(app);
     window.present();
-    
 }
 
 fn load_css() {
@@ -47,7 +44,7 @@ fn load_css() {
     provider.load_from_data(include_str!("resources/ui.css"));
 
     // Add the provider to the default screen
-    gtk::StyleContext::add_provider_for_display(
+    gtk::style_context_add_provider_for_display(
         &gdk::Display::default().expect("Could not connect to a display."),
         &provider,
         gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,

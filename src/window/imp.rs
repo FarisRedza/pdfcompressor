@@ -55,11 +55,6 @@ impl ObjectSubclass for Window {
                         println!("{}", filename.display());
                     }
                 })
-
-                // if let Ok(file) = file_dialog.open_future(Some(&window)).await {
-                //     let input_file = file.parse_name().to_string();
-                //     println!("{}", input_file);
-                // }
             },
         );
     }
@@ -97,9 +92,8 @@ impl ObjectImpl for Window {
                 String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
                 String::from("-dPDFSETTINGS=/".to_owned() + quality.borrow().clone())
             );
-
-            println!("{:?}", &compression);
-            compression.compress_file();
+            compress::print_args(&compression);
+            // compression.compress_file();
         });
     }
 }

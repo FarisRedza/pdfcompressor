@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter, Result};
 use std::process::Command;
 
 #[derive(Debug, Default, Clone)]
@@ -30,4 +31,18 @@ impl CompressObject {
             .status()
             .expect("ghostscript failed to execute");
     }
+}
+
+impl Display for CompressObject {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "Input: {}\nOutput: {}\nCompression: {}",
+            self.input_arg, self.output_arg, self.quality_arg)
+    }
+}
+
+pub fn print_args<T>(args: T)
+where 
+    T: Display,
+{
+    println!("CompressObject arguments:\n{}", args);
 }
