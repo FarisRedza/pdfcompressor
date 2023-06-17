@@ -1,10 +1,10 @@
 use std::process::Command;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct CompressObject {
     pub input_arg: String,
     pub output_arg: String,
-    pub quality: String,
+    pub quality_arg: String,
 }
 
 impl CompressObject {
@@ -16,7 +16,7 @@ impl CompressObject {
             .arg( "-dNOPAUSE")
             .arg("-dQUIET")
             .arg( "-dBATCH")
-            .arg(self.quality.as_str())
+            .arg(self.quality_arg.as_str())
             .arg(self.output_arg.as_str())
             .arg(self.input_arg.as_str())
             .status()

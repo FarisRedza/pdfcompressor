@@ -53,41 +53,34 @@ impl ObjectImpl for Window {
         // Call "constructed" on parent
         self.parent_constructed();
 
-        let mut compression = compress::CompressObject{
-            quality: String::from("-dPDFSETTINGS=/"),
-            ..Default::default()
-        };
+        self.input_file_button.connect_clicked(move |_| {
 
-        let number = Rc::new(Cell::new(0));
-        self.input_file_button.connect_clicked(clone!(@weak number => move |_| {
-            number.set(number.get() + 1);
-        }));
+        });
 
-        println!("{:?}", &number);
-
-        let quality = Rc::new(RefCell::new("test"));
+        let quality = Rc::new(RefCell::new(""));
         self.quality_dropdown.connect_selected_item_notify(clone!(@strong quality => move |quality_dropdown| {
-            let option = quality_dropdown.selected();
-            let level = match option {
+            let level = quality_dropdown.selected();
+            let selected_level = match level {
                 0 => "screen",
                 1 => "ebook",
                 2 => "printer",
                 _ => panic!("Error getting quality level"),
             };
-            let test = &quality;
-            println!("{:?}", &quality);
-            // quality.set(option);
+            quality.replace(selected_level);
         }));
 
-        // compression.quality.push_str(level);
-        // println!("{:?}", &compression);
-
         self.output_file_button.connect_clicked(move |_| {
-            println!("Hello there again");
+
         });
 
         self.compress_button.connect_clicked(move |_| {
-            println!("Compressing");
+            let compression = compress::CompressObject{
+                quality_arg: String::from("-dPDFSETTINGS=/".to_owned() + quality.borrow().clone()),
+                input_arg: String::from("/home/faris/Downloads/Report.pdf"),
+                output_arg: String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
+            };
+            println!("{:?}", &compression);
+            compression.compress_file();
         });
     }
 }
