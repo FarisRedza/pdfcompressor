@@ -1,11 +1,10 @@
 use crate::compress;
 
-use std::cell::Cell;
 use std::cell::RefCell;
 use std::rc::Rc;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::glib;
+use gtk::{glib, gio};
 use glib::clone;
 use glib::subclass::InitializingObject;
 
@@ -40,6 +39,29 @@ impl ObjectSubclass for Window {
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
+        klass.install_action_async(
+            "window.open",
+            None,
+            |window, _action_name, _action_target| async move {
+                let file_dialog = gtk::FileDialog::builder()
+                    .title("Open File")
+                    .accept_label("Open")
+                    .modal(true)
+                    .build();
+
+                file_dialog.open(Some(&window), gio::Cancellable::NONE, move |file| {
+                    if let Ok(file) = file {
+                        let filename = file.path().expect("Couldn't get file path");
+                        println!("{}", filename.display());
+                    }
+                })
+
+                // if let Ok(file) = file_dialog.open_future(Some(&window)).await {
+                //     let input_file = file.parse_name().to_string();
+                //     println!("{}", input_file);
+                // }
+            },
+        );
     }
 
     fn instance_init(obj: &InitializingObject<Self>) {
@@ -52,10 +74,6 @@ impl ObjectImpl for Window {
     fn constructed(&self) {
         // Call "constructed" on parent
         self.parent_constructed();
-
-        self.input_file_button.connect_clicked(move |_| {
-
-        });
 
         let quality = Rc::new(RefCell::new(""));
         self.quality_dropdown.connect_selected_item_notify(clone!(@strong quality => move |quality_dropdown| {
@@ -70,7 +88,7 @@ impl ObjectImpl for Window {
         }));
 
         self.output_file_button.connect_clicked(move |_| {
-
+            // let input_file = window.
         });
 
         self.compress_button.connect_clicked(move |_| {
