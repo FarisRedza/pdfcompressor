@@ -92,11 +92,12 @@ impl ObjectImpl for Window {
         });
 
         self.compress_button.connect_clicked(move |_| {
-            let compression = compress::CompressObject{
-                quality_arg: String::from("-dPDFSETTINGS=/".to_owned() + quality.borrow().clone()),
-                input_arg: String::from("/home/faris/Downloads/Report.pdf"),
-                output_arg: String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
-            };
+            let compression = compress::CompressObject::new(
+                String::from("/home/faris/Downloads/Report.pdf"),
+                String::from("-sOutputFile=/home/faris/Downloads/Report_compressed.pdf"),
+                String::from("-dPDFSETTINGS=/".to_owned() + quality.borrow().clone())
+            );
+
             println!("{:?}", &compression);
             compression.compress_file();
         });

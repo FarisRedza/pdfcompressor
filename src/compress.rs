@@ -8,6 +8,14 @@ pub struct CompressObject {
 }
 
 impl CompressObject {
+    pub fn new(input_arg: String, output_arg: String, quality_arg: String) -> CompressObject {
+        CompressObject {
+            input_arg,
+            output_arg,
+            quality_arg,
+        }
+    }
+
     pub fn compress_file(&self) {
         dbg!(&self);
         Command::new("gs")
