@@ -6,8 +6,15 @@ use crate::fl;
 use cosmic::app::{Command, Core};
 use cosmic::iced::alignment::{Horizontal, Vertical};
 use cosmic::iced::{Alignment, Length};
+use cosmic::widget::menu::Action;
 use cosmic::widget::{self, icon, menu, nav_bar};
 use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Apply, Element};
+use cosmic::iced::keyboard::{Key, Modifiers};
+use cosmic::widget::menu::key_bind::KeyBind;
+
+use crate::app::key_bind::key_binds;
+
+mod key_bind;
 
 const REPOSITORY: &str = "https://github.com/FarisRedza/pdfcompressor";
 
@@ -31,12 +38,14 @@ pub struct YourApp {
 pub enum Message {
     LaunchUrl(String),
     ToggleContextPage(ContextPage),
+    WindowClose,
+    Key(Modifiers, Key),
 }
 
 /// Identifies a page in the application.
 pub enum Page {
-    Page1,
-    Page2,
+    Preview,
+    Compression,
     Page3,
 }
 
@@ -58,6 +67,7 @@ impl ContextPage {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum MenuAction {
     About,
+    WindowClose,
 }
 
 impl menu::action::MenuAction for MenuAction {
@@ -66,6 +76,7 @@ impl menu::action::MenuAction for MenuAction {
     fn message(&self) -> Self::Message {
         match self {
             MenuAction::About => Message::ToggleContextPage(ContextPage::About),
+            MenuAction::WindowClose => Message::WindowClose,
         }
     }
 }
@@ -112,13 +123,13 @@ impl Application for YourApp {
 
         nav.insert()
             .text(fl!("preview"))
-            .data::<Page>(Page::Page1)
+            .data::<Page>(Page::Preview)
             .icon(icon::from_name("applications-science-symbolic"))
             .activate();
 
         nav.insert()
             .text(fl!("compression"))
-            .data::<Page>(Page::Page2)
+            .data::<Page>(Page::Compression)
             .icon(icon::from_name("applications-system-symbolic"));
 
         nav.insert()
@@ -129,7 +140,7 @@ impl Application for YourApp {
         let mut app = YourApp {
             core,
             context_page: ContextPage::default(),
-            key_binds: HashMap::new(),
+            key_binds: key_binds(),
             nav,
         };
 
@@ -145,7 +156,10 @@ impl Application for YourApp {
                 menu::root(fl!("file")),
                 menu::items(
                     &self.key_binds,
-                    vec![menu::Item::Button(fl!("open-file"), MenuAction::About)],
+                    vec![
+                        menu::Item::Button(fl!("open-file"), MenuAction::About),
+                        menu::Item::Button(fl!("quit"), MenuAction::WindowClose),
+                    ],
                 ),
             ),
             menu::Tree::with_children(
@@ -197,6 +211,18 @@ impl Application for YourApp {
 
                 // Set the title of the context drawer.
                 self.set_context_title(context_page.title());
+            }
+
+            Message::WindowClose => {
+                return cosmic::iced::window::close(cosmic::iced::window::Id::MAIN);
+            }
+
+            Message::Key(modifiers, key) => {
+                for (key_bind, action) in self.key_binds.iter() {
+                    if key_bind.matches(modifiers, &key) {
+                        return self.update(action.message());
+                    }
+                }
             }
         }
         Command::none()
