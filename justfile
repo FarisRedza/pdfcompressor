@@ -1,5 +1,5 @@
-name := 'cosmic-app-template'
-export APPID := 'com.example.CosmicAppTemplate'
+name := 'pdfcompressor'
+export APPID := 'com.FarisRedza.pdfcompressor'
 
 rootdir := ''
 prefix := '/usr'

@@ -9,7 +9,7 @@ use cosmic::iced::{Alignment, Length};
 use cosmic::widget::{self, icon, menu, nav_bar};
 use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Apply, Element};
 
-const REPOSITORY: &str = "https://github.com/edfloreshz/cosmic-app-template";
+const REPOSITORY: &str = "https://github.com/FarisRedza/pdfcompressor";
 
 /// This is the struct that represents your application.
 /// It is used to define the data that will be used by your application.
@@ -85,7 +85,7 @@ impl Application for YourApp {
 
     type Message = Message;
 
-    const APP_ID: &'static str = "com.example.CosmicAppTemplate";
+    const APP_ID: &'static str = "com.FarisRedza.pdfcompressor";
 
     fn core(&self) -> &Core {
         &self.core
@@ -111,13 +111,13 @@ impl Application for YourApp {
         let mut nav = nav_bar::Model::default();
 
         nav.insert()
-            .text("Page 1")
+            .text(fl!("preview"))
             .data::<Page>(Page::Page1)
             .icon(icon::from_name("applications-science-symbolic"))
             .activate();
 
         nav.insert()
-            .text("Page 2")
+            .text(fl!("compression"))
             .data::<Page>(Page::Page2)
             .icon(icon::from_name("applications-system-symbolic"));
 
@@ -140,13 +140,22 @@ impl Application for YourApp {
 
     /// Elements to pack at the start of the header bar.
     fn header_start(&self) -> Vec<Element<Self::Message>> {
-        let menu_bar = menu::bar(vec![menu::Tree::with_children(
-            menu::root(fl!("view")),
-            menu::items(
-                &self.key_binds,
-                vec![menu::Item::Button(fl!("about"), MenuAction::About)],
+        let menu_bar = menu::bar(vec![
+            menu::Tree::with_children(
+                menu::root(fl!("file")),
+                menu::items(
+                    &self.key_binds,
+                    vec![menu::Item::Button(fl!("open-file"), MenuAction::About)],
+                ),
             ),
-        )]);
+            menu::Tree::with_children(
+                menu::root(fl!("view")),
+                menu::items(
+                    &self.key_binds,
+                    vec![menu::Item::Button(fl!("about"), MenuAction::About)],
+                ),
+            ),
+        ]);
 
         vec![menu_bar.into()]
     }
