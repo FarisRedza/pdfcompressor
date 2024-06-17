@@ -40,6 +40,7 @@ pub enum Message {
     ToggleContextPage(ContextPage),
     WindowClose,
     Key(Modifiers, Key),
+    OpenFileDialog,
 }
 
 /// Identifies a page in the application.
@@ -68,6 +69,7 @@ impl ContextPage {
 pub enum MenuAction {
     About,
     WindowClose,
+    OpenFileDialog,
 }
 
 impl menu::action::MenuAction for MenuAction {
@@ -77,6 +79,7 @@ impl menu::action::MenuAction for MenuAction {
         match self {
             MenuAction::About => Message::ToggleContextPage(ContextPage::About),
             MenuAction::WindowClose => Message::WindowClose,
+            MenuAction::OpenFileDialog => Message::OpenFileDialog,
         }
     }
 }
@@ -223,6 +226,9 @@ impl Application for YourApp {
                         return self.update(action.message());
                     }
                 }
+            }
+
+            Message::OpenFileDialog => {
             }
         }
         Command::none()
